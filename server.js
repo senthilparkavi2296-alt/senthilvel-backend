@@ -31,6 +31,24 @@ app.use('/api/attendance', require('./src/routes/attendanceRoutes'));
 app.use('/api/exams', require('./src/routes/examRoutes'));
 app.use('/api/settings', require('./src/routes/settingRoutes'));
 
+// ── ONE-TIME SETUP ROUTE ─────────────────────────────────────────
+// Visit GET /setup to auto-create the admin user. Disable after first use.
+app.get('/setup', async (req, res) => {
+  try {
+    const User = require('./src/models/User');
+    const bcrypt = require('bcryptjs');
+    const existing = await User.findOne({ email: 'admin@senthilvel.com' });
+    if (existing) {
+      return res.json({ success: true, message: '✅ Admin already exists! Login with: admin@senthilvel.com / admin123' });
+    }
+    const hashed = await bcrypt.hash('admin123', 10);
+    await User.create({ name: 'Super Admin', email: 'admin@senthilvel.com', password: hashed, role: 'admin' });
+    res.json({ success: true, message: '✅ Admin created! Login with: admin@senthilvel.com / admin123' });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
+
 const PORT = process.env.PORT || 5000;
 
 app.listen(PORT, () => {

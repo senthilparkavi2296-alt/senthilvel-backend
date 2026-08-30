@@ -3,7 +3,7 @@ const mongoose = require('mongoose');
 const bcrypt = require('bcryptjs');
 const User = require('./src/models/User');
 
-const MONGO_URI = 'mongodb://localhost:27017/senthilvel-cms';
+const MONGO_URI = process.env.MONGO_URI;
 
 async function createAdmin() {
   try {
