@@ -4,6 +4,9 @@ const cors = require('cors');
 const connectDB = require('./src/config/db');
 
 const app = express();
+app.get('/', (req, res) => {
+  res.send('Senthilvel School API is running');
+});
 
 // Connect to Database
 connectDB();
